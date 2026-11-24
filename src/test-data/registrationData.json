@@ -1,0 +1,10 @@
+{
+  "firstName": "QA",
+  "lastName": "Automation",
+  "address": "123 Test Street",
+  "city": "Austin",
+  "state": "TX",
+  "zipCode": "78701",
+  "phone": "5551234567",
+  "ssn": "123-45-6789"
+}
