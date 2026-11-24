@@ -1,0 +1,52 @@
+name: Playwright Tests (Windows)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  playwright:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    env:
+      PARABANK_BASE_URL: https://parabank.parasoft.com/parabank
+      PARABANK_PASSWORD: ${{ secrets.PARABANK_PASSWORD }}
+      CI: true
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chrome
+        run: npx playwright install chrome
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-windows
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
